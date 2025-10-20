@@ -88,11 +88,12 @@ class AccountsResource:
         response = await self.http.post(f"/accounts/rails/{rail_name}", user_id=user_id)
         return response.json()
 
-    async def get_transfer_history(self, limit: int = 20, offset: int = 0) -> Dict[str, Any]:
+    async def get_transfer_history(self, user_id: str, limit: int = 20, offset: int = 0) -> Dict[str, Any]:
         """
         Retrieve the authenticated user's transfer history.
 
         Args:
+            user_id: User ID to retrieve transfer history for
             limit: number of transfers to return (default 20)
             offset: pagination offset (default 0)
 
@@ -100,5 +101,5 @@ class AccountsResource:
             Parsed JSON response with transfers, limit, offset and user_id
         """
         params = {"limit": limit, "offset": offset}
-        response = await self.http.get("/accounts/transfers", params=params)
+        response = await self.http.get("/accounts/transfers", params=params, user_id=user_id)
         return response.json()
