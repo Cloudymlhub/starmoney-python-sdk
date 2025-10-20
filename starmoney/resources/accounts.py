@@ -103,3 +103,21 @@ class AccountsResource:
         params = {"limit": limit, "offset": offset}
         response = await self.http.get("/accounts/transfers", params=params, user_id=user_id)
         return response.json()
+
+    async def get_user_by_phone(self, phone_number: str) -> Dict[str, Any] | None:
+        """
+        Retrieve a user by phone number using the accounts lookup endpoint.
+
+        Args:
+            phone_number: Phone number string to lookup (should be in E.164 or service-expected format)
+
+        Returns:
+            The parsed JSON response as a dict if found, or None if the API returns 404.
+
+        Notes:
+            - The phone number will be URL-encoded by the HTTP client when passed as part of the path.
+            - This method maps a 404 response to None for convenience.
+        """
+        response = await self.http.get(f"/accounts/lookup/phone/{phone_number}")
+
+        return response.json()
