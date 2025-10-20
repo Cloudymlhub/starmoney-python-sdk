@@ -56,7 +56,9 @@ class HTTPClient:
 
     async def __aenter__(self) -> "HTTPClient":
         """Async context manager entry."""
-        self._client = httpx.AsyncClient(timeout=self.timeout, follow_redirects=self.follow_redirects)
+        self._client = httpx.AsyncClient(
+            timeout=self.timeout, follow_redirects=self.follow_redirects
+        )
         return self
 
     async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
@@ -67,7 +69,9 @@ class HTTPClient:
     def _get_client(self) -> httpx.AsyncClient:
         """Get or create HTTP client."""
         if self._client is None:
-            self._client = httpx.AsyncClient(timeout=self.timeout, follow_redirects=self.follow_redirects)
+            self._client = httpx.AsyncClient(
+                timeout=self.timeout, follow_redirects=self.follow_redirects
+            )
         return self._client
 
     def _add_headers(
