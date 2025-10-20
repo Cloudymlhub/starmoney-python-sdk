@@ -3,7 +3,7 @@ name: SDK Release
 on:
   push:
     branches:
-      - main  # Run when main gets updated
+      - master  # Run when master gets updated
 
 jobs:
   release:
