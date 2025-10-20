@@ -99,3 +99,71 @@ class WebhooksResource:
 
         response = await self.http.post("/webhook-subscriptions", json=payload)
         return response.json()
+
+    async def update_subscription(
+        self,
+        subscription_id: str,
+        endpoint_url: Optional[str] = None,
+        webhook_secret: Optional[str] = None,
+        is_active: Optional[bool] = None,
+        event_types: Optional[list[str]] = None,
+        user_filters: Optional[list[str]] = None,
+        retry_attempts: Optional[int] = None,
+        retry_delay_seconds: Optional[int] = None,
+        timeout_seconds: Optional[int] = None,
+    ) -> dict[str, Any]:
+        """
+        Update an existing webhook subscription.
+
+        Only the provided (non-None) fields will be sent in the update request.
+
+        Args:
+            subscription_id: ID of the subscription to update
+            endpoint_url: New endpoint URL
+            webhook_secret: New webhook secret
+            is_active: Enable/disable subscription
+            event_types: List of event types for the subscription
+            user_filters: List of user ids to filter events
+            retry_attempts: Max retry attempts
+            retry_delay_seconds: Retry delay in seconds
+            timeout_seconds: Delivery timeout in seconds
+
+        Returns:
+            Updated subscription data as returned by the API
+        """
+        payload: dict[str, Any] = {}
+        if endpoint_url is not None:
+            payload["endpoint_url"] = endpoint_url
+        if webhook_secret is not None:
+            payload["webhook_secret"] = webhook_secret
+        if is_active is not None:
+            payload["is_active"] = is_active
+        if event_types is not None:
+            payload["event_types"] = event_types
+        if user_filters is not None:
+            payload["user_filters"] = user_filters
+        if retry_attempts is not None:
+            payload["retry_attempts"] = retry_attempts
+        if retry_delay_seconds is not None:
+            payload["retry_delay_seconds"] = retry_delay_seconds
+        if timeout_seconds is not None:
+            payload["timeout_seconds"] = timeout_seconds
+
+        response = await self.http.put(f"/webhook-subscriptions/{subscription_id}", json=payload)
+        return response.json()
+
+    async def list_subscriptions(self, active_only: bool = True) -> dict[str, Any]:
+        """
+        List webhook subscriptions for the calling service.
+
+        Args:
+            active_only: if True, return only active subscriptions (default True)
+
+        Returns:
+            Parsed JSON response from the API. Typically a dict with keys
+            `subscriptions` (list) and `total_count`, but some implementations
+            may return a raw list — callers should handle both shapes.
+        """
+        params = {"active_only": str(active_only).lower()} if active_only is not None else {}
+        response = await self.http.get("/webhook-subscriptions", params=params)
+        return response.json()
