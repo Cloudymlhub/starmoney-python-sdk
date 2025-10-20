@@ -1,0 +1,81 @@
+name: SDK Release
+
+on:
+  push:
+    branches:
+      - main  # Run when main gets updated
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      # 🔍 Detect if version changed in the last commit range
+      - name: Check if version changed
+        id: check_version
+        run: |
+          CHANGED=$(git diff HEAD~1 HEAD -- sdk/python/pyproject.toml || true)
+          if echo "$CHANGED" | grep -q '^+version'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 🛑 Skip everything if version didn't change
+      - name: Skip if version not changed
+        if: steps.check_version.outputs.changed == 'false'
+        run: |
+          echo "Version didn't change — skipping release."
+          exit 0
+
+      # 🧾 Read version number
+      - name: Get version from Poetry
+        id: version
+        run: |
+          cd sdk/python
+          VERSION=$(poetry version -s)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # 🏷️ Create and push tag
+      - name: Create tag
+        run: |
+          TAG="v${{ steps.version.outputs.version }}"
+          echo "Detected version: $TAG"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists. Skipping."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag -a "$TAG" -m "Release $TAG"
+            git push origin "$TAG"
+          fi
+
+      # 📦 Build package
+      - name: Build SDK wheel
+        run: |
+          cd sdk/python
+          poetry build
+
+      # 🚀 Publish GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: "SDK v${{ steps.version.outputs.version }}"
+          generate_release_notes: true
+          files: |
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
