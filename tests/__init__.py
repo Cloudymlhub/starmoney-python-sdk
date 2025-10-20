@@ -1,1 +1,0 @@
-"""StarMoney SDK - Tests"""
