@@ -1,6 +1,7 @@
 """StarMoney SDK - Accounts Resource"""
 
 from typing import Any
+from typing import Dict
 from ..http_client import HTTPClient
 
 
@@ -85,4 +86,19 @@ class AccountsResource:
             ```
         """
         response = await self.http.post(f"/accounts/rails/{rail_name}", user_id=user_id)
+        return response.json()
+
+    async def get_transfer_history(self, limit: int = 20, offset: int = 0) -> Dict[str, Any]:
+        """
+        Retrieve the authenticated user's transfer history.
+
+        Args:
+            limit: number of transfers to return (default 20)
+            offset: pagination offset (default 0)
+
+        Returns:
+            Parsed JSON response with transfers, limit, offset and user_id
+        """
+        params = {"limit": limit, "offset": offset}
+        response = await self.http.get("/accounts/transfers", params=params)
         return response.json()
