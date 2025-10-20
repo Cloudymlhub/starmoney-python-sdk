@@ -27,7 +27,7 @@ jobs:
       - name: Check if version changed
         id: check_version
         run: |
-          CHANGED=$(git diff HEAD~1 HEAD -- sdk/python/pyproject.toml || true)
+          CHANGED=$(git diff HEAD~1 HEAD -- pyproject.toml || true)
           if echo "$CHANGED" | grep -q '^+version'; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
@@ -45,7 +45,6 @@ jobs:
       - name: Get version from Poetry
         id: version
         run: |
-          cd sdk/python
           VERSION=$(poetry version -s)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -66,7 +65,6 @@ jobs:
       # 📦 Build package
       - name: Build SDK wheel
         run: |
-          cd sdk/python
           poetry build
 
       # 🚀 Publish GitHub Release
@@ -77,5 +75,5 @@ jobs:
           name: "SDK v${{ steps.version.outputs.version }}"
           generate_release_notes: true
           files: |
-            sdk/python/dist/*.whl
-            sdk/python/dist/*.tar.gz
+            dist/*.whl
+            dist/*.tar.gz
