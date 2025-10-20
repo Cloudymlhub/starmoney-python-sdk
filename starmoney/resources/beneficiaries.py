@@ -1,6 +1,6 @@
 """StarMoney SDK - Beneficiaries Resource"""
 
-from typing import Any
+from typing import Any, Optional
 from ..http_client import HTTPClient
 
 
@@ -21,9 +21,9 @@ class BeneficiariesResource:
         user_id: str,
         name: str,
         iban: str,
-        currency: str,
-        bank_name: str,
-        address: str,
+        bank_name: Optional[str] = None,
+        phone_number: Optional[str] = None,
+        email: Optional[str] = None,
     ) -> dict[str, Any]:
         """
         Create a new beneficiary for user.
@@ -45,7 +45,6 @@ class BeneficiariesResource:
                 user_id=user_id,
                 name="John Doe",
                 iban="FR1420041010050500013M02606",
-                currency="EUR",
                 bank_name="Test Bank",
                 address="123 Test Ave"
             )
@@ -54,10 +53,13 @@ class BeneficiariesResource:
         payload = {
             "name": name,
             "iban": iban,
-            "currency": currency,
-            "bank_name": bank_name,
-            "address": address,
         }
+        if bank_name:
+            payload["bank_name"] = bank_name
+        if phone_number:
+            payload["phone_number"] = phone_number
+        if email:
+            payload["email"] = email
 
         response = await self.http.post("/beneficiaries", json=payload, user_id=user_id)
         return response.json()
