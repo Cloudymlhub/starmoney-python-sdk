@@ -113,34 +113,11 @@ class AccountsResource:
 
         Returns:
             The parsed JSON response as a dict if found, or None if the API returns 404.
+
+        Notes:
+            - The phone number will be URL-encoded by the HTTP client when passed as part of the path.
+            - This method maps a 404 response to None for convenience.
         """
         response = await self.http.get(f"/accounts/lookup/phone/{phone_number}")
 
-        return response.json()
-
-    async def get_user_available_rails(self, user_id: str) -> Dict[str, Any]:
-        """
-        Get available payment rails for the authenticated user.
-
-        Returns the list of payment rails available to the user based on their
-        stored credentials and rail configurations.
-
-        Args:
-            user_id: User ID to retrieve available rails for
-
-        Returns:
-            Parsed JSON response containing:
-            - user_id: The user's ID
-            - available_rails: List of rails with name, display info, and credential status
-            - total_rails: Total number of rails
-            - configured_rails: Number of rails with stored credentials
-
-        Example:
-            ```python
-            rails = await client.accounts.get_user_available_rails(user_id)
-            for rail in rails["available_rails"]:
-                print(f"{rail['name']}: {rail['has_credentials']}")
-            ```
-        """
-        response = await self.http.get("/accounts/rails", user_id=user_id)
         return response.json()
