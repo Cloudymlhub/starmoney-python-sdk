@@ -16,7 +16,7 @@ async def main():
     async with StarmoneyClient(
         jwt_secret="your-jwt-secret-here",  # From .dev_secrets.json
         issuer="your-service-name",
-        base_url="http://localhost:8000/api/v1",
+        base_url="http://localhost:8000/starmoney/v1",
     ) as client:
 
         # 1. Create account
