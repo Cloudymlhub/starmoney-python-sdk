@@ -74,7 +74,7 @@ class StarmoneyClient:
         self,
         jwt_secret: str,
         issuer: str = "starmoney-sdk",
-        base_url: str = "http://localhost:8000/api/v1",
+        base_url: str = "http://localhost:8000/starmoney/v1",
         timeout: int = 30,
     ):
         """
@@ -86,7 +86,7 @@ class StarmoneyClient:
             issuer: Issuer identifier for JWT claims
                    (must be registered with StarMoney)
             base_url: Base URL for StarMoney API
-                     Default: http://localhost:8000/api/v1 (local dev)
+                     Default: http://localhost:8000/starmoney/v1 (local dev)
                      Production: https://api.starmoney.com/v1
             timeout: Request timeout in seconds (default: 30)
         """

@@ -85,7 +85,7 @@ client = StarmoneyClient(
     jwt_secret="your-jwt-secret-here",
     issuer="your-service-name",
     base_url="https://api.starmoney.com/v1",  # Production
-    # base_url="http://localhost:8000/api/v1"  # Local development
+    # base_url="http://localhost:8000/starmoney/v1"  # Local development
     timeout=30
 )
 ```
@@ -280,7 +280,7 @@ Main client class for interacting with StarMoney API.
 **Constructor Arguments:**
 - `jwt_secret` (str): JWT secret key for authentication
 - `issuer` (str): Issuer identifier (default: "starmoney-sdk")
-- `base_url` (str): API base URL (default: "http://localhost:8000/api/v1")
+- `base_url` (str): API base URL (default: "http://localhost:8000/starmoney/v1")
 - `timeout` (int): Request timeout in seconds (default: 30)
 
 **Resources:**

@@ -43,7 +43,7 @@ class HTTPClient:
         Initialize HTTP client.
 
         Args:
-            base_url: Base URL for StarMoney API (e.g., 'http://localhost:8000/api/v1')
+            base_url: Base URL for StarMoney API (e.g., 'http://localhost:8000/starmoney/v1')
             auth: Authentication manager for JWT tokens
             timeout: Request timeout in seconds
         """
