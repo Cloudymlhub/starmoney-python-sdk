@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "starmoney-python"
-version = "0.1.43"
+version = "0.1.44"
 description = "Official Python SDK for StarMoney Bank API - Ultra-light async client"
 authors = ["StarMoney Team <dev@starmoney.com>"]
 license = "MIT"
@@ -11,7 +11,7 @@ keywords = ["fintech", "payments", "banking", "api", "sdk", "async"]
 packages = [{include = "starmoney"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 httpx = ">=0.25.1,<0.26.0"
 pydantic = "^2.0"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
